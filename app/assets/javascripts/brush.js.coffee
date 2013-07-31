@@ -26,10 +26,13 @@ class PG.Brush
       stop: @getRange
 
   getRange: (event, ui) =>
-    left = ui.position.left
-    width = @element.width()
-    startIndex = parseInt((left * @percentPx / 100) * @domainValues.length - 1, 10)
-    endIndex = parseInt(((left + width) * @percentPx / 100) * @domainValues.length - 1, 10)
+    left        = ui.position.left
+    width       = @element.width()
+    startIndex  = parseInt((left * @percentPx / 100) * @domainValues.length - 1, 10)
+    endIndex    = parseInt(((left + width) * @percentPx / 100) * @domainValues.length - 1, 10)
+    startIndex  = 0 if !startIndex? or startIndex < 0
+    endIndex    = @domainValues.length - 1 if !endIndex? or endIndex < 0
+
     console.log "PG.Brush#getRange: ", [@domainValues[startIndex], @domainValues[endIndex]]
     return [@domainValues[startIndex], @domainValues[endIndex]]
 
