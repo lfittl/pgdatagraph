@@ -15,5 +15,6 @@
 //= require jquery-ui
 //= require d3.v2
 //= require rickshaw
+//= require pg
 //= require brush
 //= require datagraph

@@ -1,0 +1,2 @@
+window.PG =
+  K: -> yes

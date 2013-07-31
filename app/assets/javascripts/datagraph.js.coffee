@@ -1,4 +1,4 @@
-class window.DataGraph
+class PG.DataGraph
 
   defaults:
     className : "datagraph"
@@ -8,14 +8,16 @@ class window.DataGraph
     renderer  : "line"
 
   constructor: (element, @series, options) ->
-    @element  = $(element)
-    @options  = $.extend @defaults, options
-    @detail   = $("<div class='#{@options.className}__detail'></div>")
+    @element = $(element)
+    @options = $.extend @defaults, options
+    @graphs  = []
+
+    @detail = $("<div class='#{@options.className}__detail'></div>")
     @element.append @detail
     @renderDetailGraph()
 
     if @options.filters
-      @filters  = $("<div class='#{@options.className}__filters'></div>")
+      @filters = $("<div class='#{@options.className}__filters'></div>")
       @element.append @filters
 
     if @options.overview
@@ -31,7 +33,9 @@ class window.DataGraph
       stroke: yes
       preserve: yes
       series: series
+
     @detailGraph.render()
+    @graphs.push @detailGraph
 
   renderOverviewGraph: (series) ->
     series = @series unless series?
@@ -42,35 +46,8 @@ class window.DataGraph
       preserve: yes
       series: series
 
-    @renderBrush()
+    @brush = new PG.Brush @overview, @overviewGraph,
+      className: "#{@options.className}__brush"
+
     @overviewGraph.render()
-
-  renderBrush: ->
-    if @brush? and @brush.length > 0
-      @brush.remove()
-
-    @brush = $("<div class='#{@options.className}__brush'></div>")
-    @overview.append @brush
-
-    @min          = @overviewGraph.dataDomain()[0]
-    @max          = @overviewGraph.dataDomain()[1]
-    @domainValues = [@min..@max]
-    @percentPx    = 100 / @brush.parent().width()
-
-    @brush.draggable
-      axis: "x"
-      containment: @overview
-      stop: @getRange
-
-    @brush.resizable
-      containment: @overview
-      handles: "e, w"
-      stop: @getRange
-
-  getRange: (event, ui) =>
-    left = ui.position.left
-    width = @brush.width()
-    startIndex = parseInt((left * @percentPx / 100) * @domainValues.length - 1, 10)
-    endIndex = parseInt(((left + width) * @percentPx / 100) * @domainValues.length - 1, 10)
-    console.log [@domainValues[startIndex], @domainValues[endIndex]]
-    return [@domainValues[startIndex], @domainValues[endIndex]]
+    @graphs.push @overviewGraph
