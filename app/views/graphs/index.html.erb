@@ -1,2 +1,26 @@
-<h1>Graphs#index</h1>
-<p>Find me in app/views/graphs/index.html.erb</p>
+<div class="datagraph" id="demo"></div>
+
+<script>
+
+  $(function() {
+    var seriesData = [[], [], []];
+    var labels = ["label 1", "label 2", "label 3"];
+    var random = new Rickshaw.Fixtures.RandomData(150);
+
+    for (var i = 0; i < 150; i++) {
+      random.addData(seriesData);
+    }
+
+    var palette = new Rickshaw.Color.Palette({ scheme: "classic9" });
+    var series = [];
+    for (var i = 0; i < seriesData.length; i++) {
+      series.push({
+        color: palette.color(),
+        data: seriesData[i],
+        name: labels[i]
+      });
+    }
+    new DataGraph("#demo", series);
+  });
+
+</script>
