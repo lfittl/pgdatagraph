@@ -12,7 +12,8 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= jquery-ui-1.10.3.custom
+//= require jquery-ui
 //= require d3.v2
 //= require rickshaw
+//= require brush
 //= require datagraph

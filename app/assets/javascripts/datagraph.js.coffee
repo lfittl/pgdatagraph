@@ -41,5 +41,36 @@ class window.DataGraph
       stroke: yes
       preserve: yes
       series: series
+
+    @renderBrush()
     @overviewGraph.render()
 
+  renderBrush: ->
+    if @brush? and @brush.length > 0
+      @brush.remove()
+
+    @brush = $("<div class='#{@options.className}__brush'></div>")
+    @overview.append @brush
+
+    @min          = @overviewGraph.dataDomain()[0]
+    @max          = @overviewGraph.dataDomain()[1]
+    @domainValues = [@min..@max]
+    @percentPx    = 100 / @brush.parent().width()
+
+    @brush.draggable
+      axis: "x"
+      containment: @overview
+      stop: @getRange
+
+    @brush.resizable
+      containment: @overview
+      handles: "e, w"
+      stop: @getRange
+
+  getRange: (event, ui) =>
+    left = ui.position.left
+    width = @brush.width()
+    startIndex = parseInt((left * @percentPx / 100) * @domainValues.length - 1, 10)
+    endIndex = parseInt(((left + width) * @percentPx / 100) * @domainValues.length - 1, 10)
+    console.log [@domainValues[startIndex], @domainValues[endIndex]]
+    return [@domainValues[startIndex], @domainValues[endIndex]]
