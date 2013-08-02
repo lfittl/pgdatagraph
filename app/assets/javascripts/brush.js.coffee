@@ -4,26 +4,35 @@ class PG.Brush
     className: ""
 
   constructor: (container, @graph, options) ->
-    @container = $(container)
-    @options = $.extend @defaults, options
+    @options    = $.extend @defaults, options
+    @container  = $(container)
+    @element    = $("<div class='brush'></div>").addClass(@options.className)
+    @coverLeft  = $("<div class='brush-cover brush-cover_left'></div>")
+    @coverRight = $("<div class='brush-cover brush-cover_right'></div>")
 
-    @element = $("<div class='brush'></div>").addClass(@options.className)
     @container.append @element
+    @container.append @coverLeft
+    @container.append @coverRight
 
-    @min          = @graph.dataDomain()[0]
-    @max          = @graph.dataDomain()[1]
-    @domainValues = [@min..@max]
-    @percentPx    = 100 / @container.width()
+    @min            = @graph.dataDomain()[0]
+    @max            = @graph.dataDomain()[1]
+    @domainValues   = [@min..@max]
+    @containerWidth = @container.width()
+    @percentPx      = 100 / @containerWidth
 
     @element.draggable
       axis: "x"
       containment: @container
       stop: @getRange
+      drag: @updateCover
 
     @element.resizable
       containment: @container
       handles: "e, w"
       stop: @getRange
+      resize: @updateCover
+
+    @resizeHandleWidth = @element.find(".ui-resizable-handle").width() - 1
 
   getRange: (event, ui) =>
     left        = ui.position.left
@@ -35,5 +44,13 @@ class PG.Brush
 
     console.log "PG.Brush#getRange: ", [@domainValues[startIndex], @domainValues[endIndex]]
     return [@domainValues[startIndex], @domainValues[endIndex]]
+
+  updateCover: (event, ui) =>
+    @coverLeft.css
+      left: 0
+      width: ui.position.left - @resizeHandleWidth
+    @coverRight.css
+      right: 0
+      width: @containerWidth - ui.position.left - @element.width() - @resizeHandleWidth
 
 

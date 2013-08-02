@@ -26,74 +26,42 @@ body {
       z-index: 2;
       width: 598px;
       height: 50px;
-      background: rgba(0, 255, 0, .5);
       position: absolute;
     }
   }
+}
+
+.brush-cover {
+  position: absolute;
+  z-index: 2;
+  background: rgba(0, 0, 0, .2);
+  top: 0;
+  height: 50px;
 }
 
 .ui-resizable-handle {
   position: absolute;
   font-size: 0.1px;
   display: block;
+  background-color: #424242;
+  border: 1px solid #222222;
+  box-shadow: inset rgba(255, 255, 255, .4) 0 1px 1px;
+  height: 56px;
+  top: -4px;
+  border-radius: 3px;
 }
 .ui-resizable-disabled .ui-resizable-handle,
 .ui-resizable-autohide .ui-resizable-handle {
   display: none;
 }
-.ui-resizable-n {
-  cursor: n-resize;
-  height: 7px;
-  width: 100%;
-  top: -5px;
-  left: 0;
-}
-.ui-resizable-s {
-  cursor: s-resize;
-  height: 7px;
-  width: 100%;
-  bottom: -5px;
-  left: 0;
-}
+
 .ui-resizable-e {
   cursor: e-resize;
-  width: 7px;
+  width: 6px;
   right: -5px;
-  top: 0;
-  height: 100%;
 }
 .ui-resizable-w {
   cursor: w-resize;
-  width: 7px;
+  width: 6px;
   left: -5px;
-  top: 0;
-  height: 100%;
-}
-.ui-resizable-se {
-  cursor: se-resize;
-  width: 12px;
-  height: 12px;
-  right: 1px;
-  bottom: 1px;
-}
-.ui-resizable-sw {
-  cursor: sw-resize;
-  width: 9px;
-  height: 9px;
-  left: -5px;
-  bottom: -5px;
-}
-.ui-resizable-nw {
-  cursor: nw-resize;
-  width: 9px;
-  height: 9px;
-  left: -5px;
-  top: -5px;
-}
-.ui-resizable-ne {
-  cursor: ne-resize;
-  width: 9px;
-  height: 9px;
-  right: -5px;
-  top: -5px;
 }
