@@ -12,6 +12,7 @@ class PG.Legend
     @legend = new Rickshaw.Graph.Legend
       graph: @graphs[0]
       element: @element.get(0)
+      naturalOrder: yes
 
     instance = @
     @graphSeries = {}
