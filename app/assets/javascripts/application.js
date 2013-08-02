@@ -11,6 +11,7 @@
 // GO AFTER THE REQUIRES BELOW.
 //
 //= require jquery
+//= require underscore
 //= require jquery_ujs
 //= require jquery-ui
 //= require d3.v2
