@@ -20,7 +20,7 @@ class PG.Legend
       $label = $(line.element).find("span").first()
       $label.attr "rel", line.series.name
       @graphSeries[line.series.name] =
-        series   : _.map @graphs, (graph) -> graph.series[graph.series.length - 1 - i]
+        series   : _.map @graphs, (graph) -> graph.series[i]
         disabled : no
       $label.on "click", ->
         instance.toggle $(this)
