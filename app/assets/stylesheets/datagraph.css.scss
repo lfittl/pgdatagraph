@@ -1,18 +1,19 @@
+body {
+  font-family: Helvetica, Arial, sans-serif;
+}
+
 .datagraph {
   width: 600px;
-  border: 2px solid #ccc;
+  margin: 30px auto;
 
   .datagraph__detail {
     height: 200px;
-    border: 1px solid #0f0;
   }
   .datagraph__filters {
     height: 30px;
-    border: 1px solid red;
   }
   .datagraph__overview {
     height: 50px;
-    border: 1px solid blue;
     position: relative;
 
     .svg {
@@ -29,10 +30,6 @@
       position: absolute;
     }
   }
-}
-
-.legend_disabled {
-  text-decoration: line-through;
 }
 
 .ui-resizable-handle {

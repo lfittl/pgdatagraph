@@ -41,6 +41,14 @@ class PG.DataGraph
       preserve: yes
       series: series
 
+    xAxis = new Rickshaw.Graph.Axis.Time
+      graph: @detailGraph
+    xAxis.render()
+
+    yAxis = new Rickshaw.Graph.Axis.Y
+      graph: @detailGraph
+    yAxis.render()
+
     @graphs.push @detailGraph
     @detailGraph.render()
 
@@ -52,6 +60,10 @@ class PG.DataGraph
       stroke: yes
       preserve: yes
       series: series
+
+    xAxis = new Rickshaw.Graph.Axis.Time
+      graph: @overviewGraph
+    xAxis.render()
 
     @brush = new PG.Brush @overview, @overviewGraph,
       className: "#{@options.className}__brush"

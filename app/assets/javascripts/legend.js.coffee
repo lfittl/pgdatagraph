@@ -25,18 +25,21 @@ class PG.Legend
         instance.toggle $(this)
 
   toggle: ($label) ->
+    $line = $label.parent(".line")
     name = $label.attr("rel")
     graphSeries = @graphSeries[name]
 
     if graphSeries.disabled
       graphSeries.disabled = no
       series.disabled = no for series in graphSeries.series
-      $label.removeClass "#{@options.className}_disabled"
+      $label.removeClass "#{@options.className}__label_disabled"
+      $line.removeClass "disabled"
     else
       return if _.every(_.pluck(_.without(@graphSeries, graphSeries), "disabled"))
       graphSeries.disabled = yes
       series.disabled = yes for series in graphSeries.series
-      $label.addClass "#{@options.className}_disabled"
+      $label.addClass "#{@options.className}__label_disabled"
+      $line.addClass "disabled"
     @updateGraphs()
 
   updateGraphs: ->
