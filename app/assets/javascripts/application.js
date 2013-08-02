@@ -18,4 +18,5 @@
 //= require rickshaw
 //= require pg
 //= require brush
+//= require legend
 //= require datagraph

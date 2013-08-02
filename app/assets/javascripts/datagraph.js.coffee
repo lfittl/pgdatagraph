@@ -12,6 +12,10 @@ class PG.DataGraph
     @options = $.extend @defaults, options
     @graphs  = []
 
+    if @options.legend
+      @legendContainer = $("<div class='#{@options.className}__legend'></div>")
+      @element.append @legendContainer
+
     @detail = $("<div class='#{@options.className}__detail'></div>")
     @element.append @detail
     @renderDetailGraph()
@@ -25,6 +29,9 @@ class PG.DataGraph
       @element.append @overview
       @renderOverviewGraph()
 
+    if @options.legend
+      @legend = new PG.Legend @legendContainer, @graphs
+
   renderDetailGraph: (series) ->
     series = @series unless series?
     @detailGraph = new Rickshaw.Graph
@@ -34,8 +41,8 @@ class PG.DataGraph
       preserve: yes
       series: series
 
-    @detailGraph.render()
     @graphs.push @detailGraph
+    @detailGraph.render()
 
   renderOverviewGraph: (series) ->
     series = @series unless series?
