@@ -92,7 +92,7 @@ class PG.DataGraph
         series = @getSeries(data)
         @renderDetailGraph(series)
         @renderOverviewGraph(series)
-        @legend = new PG.Legend @legendContainer, @graphs if @options.legend
+        @updateLegend() if @options.legend
 
   getSeries: (data) ->
     series = []
@@ -112,6 +112,9 @@ class PG.DataGraph
     series
 
   renderDetailGraph: (series) ->
+    if @detailGraph?
+      @detail.html("")
+      @detailGraph = null
     @detailGraph = new Rickshaw.Graph
       element: @detail.get(0)
       preserve: yes
@@ -130,6 +133,9 @@ class PG.DataGraph
     @detailGraph.render()
 
   renderOverviewGraph: (series) ->
+    if @overviewGraph?
+      @overview.html("")
+      @overviewGraph = null
     @overviewGraph = new Rickshaw.Graph
       element: @overview.get(0)
       preserve: yes
@@ -145,6 +151,39 @@ class PG.DataGraph
 
     @brush = new PG.Brush @overview, @overviewGraph,
       className: "#{@options.className}__brush"
+      rangeChanged: @overviewRangeChanged
+
+  overviewRangeChanged: (start, end) =>
+    $.ajax
+      dataType: "jsonp"
+      url: "#{@url}"
+      data: {
+        start: start
+        end: end
+      }
+      type: "get"
+      success: (data, status, xhr) =>
+        series = @getSeries(data)
+        @graphs = [@overviewGraph]
+        @renderDetailGraph(series)
+        @updateLegend() if @options.legend
+        @updateSeries()
+
+  updateLegend: (yo) =>
+    @legendContainer.html("")
+    @legend = new PG.Legend @legendContainer, @graphs, {
+      onToggle: (seriesStates) =>
+        @seriesStates = seriesStates
+    }
+
+  updateSeries: =>
+    if @options.overview and @overviewGraph and @seriesStates?
+      for series in @detailGraph.series
+        series.disabled = !@seriesStates[series.name]
+      for series in @overviewGraph.series
+        series.disabled = !@seriesStates[series.name]
+      @detailGraph.update()
+      @overviewGraph.update()
 
   selectDatePicker: ($datePicker) ->
     activeClassName = "#{@options.className}__datepicker_active"

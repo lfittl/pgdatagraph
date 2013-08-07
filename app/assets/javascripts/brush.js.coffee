@@ -2,6 +2,7 @@ class PG.Brush
 
   defaults:
     className: ""
+    rangeChanged: $.noop
 
   constructor: (container, @graph, options) ->
     @options    = $.extend @defaults, options
@@ -45,7 +46,7 @@ class PG.Brush
     endIndex    = @domainValues.length - 1 if !endIndex? or endIndex < 0
 
     console.log "PG.Brush#getRange: ", [@domainValues[startIndex], @domainValues[endIndex]]
-    return [@domainValues[startIndex], @domainValues[endIndex]]
+    @options.rangeChanged @domainValues[startIndex], @domainValues[endIndex]
 
   updateCover: (event, ui) =>
     @coverLeft.css

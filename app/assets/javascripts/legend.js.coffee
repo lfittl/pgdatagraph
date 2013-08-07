@@ -2,6 +2,7 @@ class PG.Legend
 
   defaults:
     className: "legend"
+    onToggle: $.noop
 
   constructor: (container, @graphs, options) ->
     @container = $(container)
@@ -21,7 +22,7 @@ class PG.Legend
       $label.attr "rel", line.series.name
       @graphSeries[line.series.name] =
         series   : _.map @graphs, (graph) -> graph.series[i]
-        disabled : no
+        disabled : line.series.disabled
       $label.on "click", ->
         instance.toggle $(this)
 
@@ -42,6 +43,9 @@ class PG.Legend
       $label.addClass "#{@options.className}__label_disabled"
       $line.addClass "disabled"
     @updateGraphs()
+    seriesStates = {}
+    _(@graphSeries).each (series, name) -> seriesStates[name] = !series.disabled
+    @options.onToggle seriesStates
 
   updateGraphs: ->
     graph.update() for graph in @graphs
