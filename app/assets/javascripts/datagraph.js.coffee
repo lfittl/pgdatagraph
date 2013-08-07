@@ -82,20 +82,6 @@ class PG.DataGraph
       @overview = $("<div class='#{@options.className}__overview'></div>")
       @element.append @overview
 
-    $.ajax
-      dataType: "jsonp"
-      url: "#{@url}"
-      data: {
-        start: @calendarFrom.datepicker('getDate').getTime() / 1000
-        end: @calendarTo.datepicker('getDate').getTime() / 1000
-      }
-      type: "get"
-      success: (data, status, xhr) =>
-        series = @getSeries(data)
-        @renderDetailGraph(series)
-        @renderOverviewGraph(series)
-        @updateLegend() if @options.legend
-
   getSeries: (data) ->
     series = []
     _(data).each (seriesData, name) =>
@@ -207,4 +193,21 @@ class PG.DataGraph
     $datePicker.addClass activeClassName
     @calendarFrom.datepicker "setDate", $datePicker.attr("rel")
     @calendarTo.datepicker "setDate", new Date()
+    @calendarDateSelected()
+
+  calendarDateSelected: =>
+    $.ajax
+      dataType: "jsonp"
+      url: "#{@url}"
+      data: {
+        start: @calendarFrom.datepicker('getDate').getTime() / 1000
+        end: @calendarTo.datepicker('getDate').getTime() / 1000
+      }
+      type: "get"
+      success: (data, status, xhr) =>
+        series = @getSeries(data)
+        @renderDetailGraph(series)
+        @renderOverviewGraph(series)
+        @updateLegend() if @options.legend
+        @updateSeries()
 
