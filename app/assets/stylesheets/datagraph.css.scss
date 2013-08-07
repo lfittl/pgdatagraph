@@ -3,14 +3,72 @@ body {
 }
 
 .datagraph {
+  -webkit-font-smoothing: antialiased;
   width: 600px;
   margin: 30px auto;
 
   .datagraph__detail {
     height: 200px;
   }
-  .datagraph__filters {
-    height: 30px;
+  .datagraph__datepickers {
+    height: 40px;
+    overflow: hidden;
+
+    .datagraph__datepicker {
+      border: 1px solid #222;
+      border-right: 0;
+      font-weight: bold;
+      font-size: 11px;
+      padding: 2px 5px;
+      float: left;
+      margin: 10px 0 0 0;
+      cursor: pointer;
+
+      &.datagraph__datepicker_first {
+        border-top-left-radius: 3px;
+        border-bottom-left-radius: 3px;
+      }
+      &.datagraph__datepicker_last {
+        border-top-right-radius: 3px;
+        border-bottom-right-radius: 3px;
+        border-right: 1px solid #222;
+      }
+    }
+    .datagraph__datepicker_active {
+      background: #424242;
+      box-shadow: inset rgba(255, 255, 255, .4) 0 1px 1px;
+      color: #fff;
+      text-shadow: 0 1px 1px rgba(0,0,0,.5);
+    }
+    .datagraph__calendar {
+      border: 1px solid #222;
+      float: right;
+      margin: 10px 0 0 0;
+      overflow: hidden;
+      border-radius: 3px;
+    }
+    .datagraph__calendar-from,
+    .datagraph__calendar-to {
+      border: none;
+      font-weight: bold;
+      font-size: 11px;
+      font-family: Helvetica, Arial, sans-serif;
+      margin: 0;
+      display: block;
+      width: 58px;
+      height: 17px;
+      line-height: 19px;
+      float: left;
+      padding: 0 5px;
+      text-align: center;
+
+      &:focus {
+        outline: none;
+      }
+    }
+    .datagraph__calendar-dash {
+      float: left;
+    }
   }
   .datagraph__overview {
     height: 50px;
