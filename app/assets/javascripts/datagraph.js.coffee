@@ -41,6 +41,8 @@ class PG.DataGraph
     @options = $.extend yes, @defaults, options
     @graphs  = []
 
+    @renderLoaders()
+
     if @options.legend
       @legendContainer = $("<div class='#{@options.className}__legend'></div>")
       @element.append @legendContainer
@@ -101,6 +103,13 @@ class PG.DataGraph
       }
     series
 
+  renderLoaders: ->
+    @loader = $("<div class='#{@options.className}__loader'><span class='#{@options.className}__loader-label'>Loading graph data…</span></div>")
+    @detailLoader = $("<div class='#{@options.className}__detail-loader'><span class='#{@options.className}__loader-label'>Loading details…</span></div>")
+    @element.addClass "#{@options.className}_loading"
+    @element.append @loader
+    @element.append @detailLoader
+
   renderDetailGraph: (series) ->
     if @detailGraph?
       @detail.html("")
@@ -158,6 +167,7 @@ class PG.DataGraph
       rangeChanged: @overviewRangeChanged
 
   overviewRangeChanged: (start, end) =>
+    @element.addClass "#{@options.className}_loading-details"
     $.ajax
       dataType: "jsonp"
       url: "#{@url}"
@@ -172,6 +182,7 @@ class PG.DataGraph
         @renderDetailGraph(series)
         @updateLegend() if @options.legend
         @updateSeries()
+        @element.removeClass "#{@options.className}_loading-details"
 
   updateLegend: (yo) =>
     @legendContainer.html("")
@@ -204,6 +215,7 @@ class PG.DataGraph
     @updateTimeframe()
 
   updateTimeframe: =>
+    @element.addClass "#{@options.className}_loading"
     $.ajax
       dataType: "jsonp"
       url: "#{@url}"
@@ -213,6 +225,7 @@ class PG.DataGraph
       }
       type: "get"
       success: (data, status, xhr) =>
+        @element.removeClass "#{@options.className}_loading"
         series = @getSeries(data)
         @renderDetailGraph(series)
         @renderOverviewGraph(series)
