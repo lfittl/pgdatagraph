@@ -14,8 +14,10 @@ class PG.Brush
     @container.append @coverLeft
     @container.append @coverRight
 
-    @min            = @graph.dataDomain()[0]
-    @max            = @graph.dataDomain()[1]
+
+    domain          = @getDataDomain()
+    @min            = domain[0]
+    @max            = domain[1]
     @domainValues   = [@min..@max]
     @containerWidth = @container.width()
     @percentPx      = 100 / @containerWidth
@@ -52,5 +54,11 @@ class PG.Brush
     @coverRight.css
       right: 0
       width: @containerWidth - ui.position.left - @element.width() - @resizeHandleWidth
+
+  getDataDomain: ->
+    data = @graph.series.map (s) -> s.data
+    min = d3.min(data.map (d) -> d[0].x)
+    max = d3.max(data.map (d) -> d[d.length - 1].x)
+    [min, max]
 
 
