@@ -3,24 +3,14 @@
 <script>
 
   $(function() {
-    var seriesData = [[], [], []];
-    var labels = ["label 1", "label 2", "label 3"];
-    var random = new Rickshaw.Fixtures.RandomData(150);
-
-    for (var i = 0; i < 150; i++) {
-      random.addData(seriesData);
-    }
-
-    var palette = new Rickshaw.Color.Palette({ scheme: "classic9" });
-    var series = [];
-    for (var i = 0; i < seriesData.length; i++) {
-      series.push({
-        color: palette.color(),
-        data: seriesData[i],
-        name: labels[i]
-      });
-    }
-    new PG.DataGraph("#demo", series);
+    new PG.DataGraph("#demo", "https://pganalyze.com/databases/1/data/table_size?table_id=2917422", {
+      series: {
+        "table_size": {
+          name: "table size",
+          renderer: "area"
+        }
+      }
+    });
   });
 
 </script>

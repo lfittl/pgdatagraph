@@ -1,20 +1,34 @@
+# Graph looks weird with series that have extreme drops to x: 0
+
 class PG.DataGraph
 
   defaults:
-    className   : "datagraph"
-    overview    : yes
-    legend      : yes
-    datePickers : [
+    className: "datagraph"
+    overview: yes
+    legend: yes
+    datePickers: [
       { label: "last 30 days",  duration: "-1m" },
       { label: "last 2 weeks",  duration: "-2w" },
       { label: "last 24 hours", duration: "-1d" }
     ]
-    dateFormat  : "dd.mm.yy"
-    renderer    : "line"
+    dateFormat: "dd.mm.yy"
+    palette: {
+      "default": {
+        color: "rgba(192,132,255,0.3)"
+        stroke: "rgba(0,0,0,0.15)"
+      }
+      "table_size": {
+        color: "rgba(241,196,15,0.3)"
+        stroke: "rgba(241,196,15,1.0)"
+      }
+    }
+    series: {
+      renderer: "line"
+    }
 
-  constructor: (element, @series, options) ->
+  constructor: (element, @url, options) ->
     @element = $(element)
-    @options = $.extend @defaults, options
+    @options = $.extend yes, @defaults, options
     @graphs  = []
 
     if @options.legend
@@ -23,7 +37,6 @@ class PG.DataGraph
 
     @detail = $("<div class='#{@options.className}__detail'></div>")
     @element.append @detail
-    @renderDetailGraph()
 
     if @options.datePickers
       @datePickers = $("<div class='#{@options.className}__datepickers'></div>")
@@ -58,19 +71,40 @@ class PG.DataGraph
     if @options.overview
       @overview = $("<div class='#{@options.className}__overview'></div>")
       @element.append @overview
-      @renderOverviewGraph()
 
-    if @options.legend
-      @legend = new PG.Legend @legendContainer, @graphs
+    $.ajax
+      dataType: "jsonp"
+      url: "#{@url}&start=#{@calendarFrom.datepicker('getDate').getTime()/1000}&end=#{@calendarTo.datepicker('getDate').getTime()/1000}"
+      type: "get"
+      success: (data, status, xhr) =>
+        series = @getSeries(data)
+        @renderDetailGraph(series)
+        @renderOverviewGraph(series)
+        @legend = new PG.Legend @legendContainer, @graphs if @options.legend
+
+  getSeries: (data) ->
+    series = []
+    _(data).each (seriesData, name) =>
+      seriesData = _.map seriesData, (s) -> { x: s[0], y: s[1] }
+      palette = @options.palette[name] or @options.palette.default
+      stroke = if renderer is "area" then no else palette.stroke
+      renderer = @options.series[name]?.renderer or @options.series.renderer
+      seriesName = @options.series[name].name or name
+      series.push {
+        data: seriesData
+        name: seriesName
+        renderer: renderer
+        stroke: stroke
+        color: palette.color
+      }
+    series
 
   renderDetailGraph: (series) ->
-    series = @series unless series?
     @detailGraph = new Rickshaw.Graph
       element: @detail.get(0)
-      renderer: @options.renderer
-      stroke: yes
       preserve: yes
       series: series
+      renderer: "multi"
 
     xAxis = new Rickshaw.Graph.Axis.Time
       graph: @detailGraph
@@ -84,23 +118,21 @@ class PG.DataGraph
     @detailGraph.render()
 
   renderOverviewGraph: (series) ->
-    series = @series unless series?
     @overviewGraph = new Rickshaw.Graph
       element: @overview.get(0)
-      renderer: @options.renderer
-      stroke: yes
       preserve: yes
       series: series
+      renderer: "multi"
 
     xAxis = new Rickshaw.Graph.Axis.Time
       graph: @overviewGraph
     xAxis.render()
 
-    @brush = new PG.Brush @overview, @overviewGraph,
-      className: "#{@options.className}__brush"
-
     @overviewGraph.render()
     @graphs.push @overviewGraph
+
+    @brush = new PG.Brush @overview, @overviewGraph,
+      className: "#{@options.className}__brush"
 
   selectDatePicker: ($datePicker) ->
     activeClassName = "#{@options.className}__datepicker_active"
@@ -108,3 +140,4 @@ class PG.DataGraph
     $datePicker.addClass activeClassName
     @calendarFrom.datepicker "setDate", $datePicker.attr("rel")
     @calendarTo.datepicker "setDate", new Date()
+
