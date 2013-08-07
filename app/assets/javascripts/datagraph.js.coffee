@@ -51,12 +51,12 @@ class PG.DataGraph
     if @options.datePickers
       @datePickers = $("<div class='#{@options.className}__datepickers'></div>")
       @element.append @datePickers
-      $calendar = $("<div class='#{@options.className}__calendar'></div>")
+      @calendar = $("<div class='#{@options.className}__calendar'></div>")
       @calendarFrom = $("<input class='#{@options.className}__calendar-from'>")
       @calendarTo = $("<input class='#{@options.className}__calendar-to'>")
-      $calendar.append @calendarFrom
-      $calendar.append $("<span class='#{@options.className}__calendar-dash'>–</span>")
-      $calendar.append @calendarTo
+      @calendar.append @calendarFrom
+      @calendar.append $("<span class='#{@options.className}__calendar-dash'>–</span>")
+      @calendar.append @calendarTo
       @calendarFrom.datepicker
         onSelect: @calendarDateSelected
         dateFormat: @options.dateFormat
@@ -65,7 +65,7 @@ class PG.DataGraph
         onSelect: @calendarDateSelected
         dateFormat: @options.dateFormat
         showAnim: ""
-      @datePickers.append $calendar
+      @datePickers.append @calendar
       if @options.datePickers.length
         for datePicker, i in @options.datePickers
           $datePicker = $("<div class='#{@options.className}__datepicker' rel='#{datePicker.duration}'>#{datePicker.label}</div>")
@@ -190,14 +190,20 @@ class PG.DataGraph
       @overviewGraph.update()
 
   selectDatePicker: ($datePicker) ->
+    @calendar.removeClass "#{@options.className}__calendar_active"
     activeClassName = "#{@options.className}__datepicker_active"
     @element.find(".#{activeClassName}").removeClass(activeClassName)
     $datePicker.addClass activeClassName
     @calendarFrom.datepicker "setDate", $datePicker.attr("rel")
     @calendarTo.datepicker "setDate", new Date()
-    @calendarDateSelected()
+    @updateTimeframe()
 
   calendarDateSelected: =>
+    @element.find(".#{@options.className}__datepicker_active").removeClass("#{@options.className}__datepicker_active")
+    @calendar.addClass "#{@options.className}__calendar_active"
+    @updateTimeframe()
+
+  updateTimeframe: =>
     $.ajax
       dataType: "jsonp"
       url: "#{@url}"

@@ -47,6 +47,7 @@ body {
       overflow: hidden;
       border-radius: 3px;
     }
+
     .datagraph__calendar-from,
     .datagraph__calendar-to {
       border: none;
@@ -61,14 +62,29 @@ body {
       float: left;
       padding: 0 5px;
       text-align: center;
-      background: rgba(204,235,197,1);
       position: relative;
       z-index: 999;
+      background: transparent;
+      -webkit-font-smoothing: antialiased;
 
       &:focus {
         outline: none;
+        background: rgba(204,235,197,1);
       }
     }
+
+    .datagraph__calendar_active {
+      background: #424242;
+      box-shadow: inset rgba(255, 255, 255, .4) 0 1px 1px;
+
+      .datagraph__calendar-from,
+      .datagraph__calendar-to,
+      .datagraph__calendar-dash {
+        color: #fff;
+        text-shadow: 0 1px 1px rgba(0,0,0,.5);
+      }
+    }
+
     .datagraph__calendar-dash {
       float: left;
     }
