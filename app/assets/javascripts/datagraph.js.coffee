@@ -33,6 +33,8 @@ class PG.DataGraph
     series: {
       renderer: "line"
     }
+    detailSmoothing: 10
+    overviewSmoothing: 10
 
   constructor: (element, @url, options) ->
     @element = $(element)
@@ -120,6 +122,7 @@ class PG.DataGraph
       preserve: yes
       series: series
       renderer: "multi"
+      dotSize: 2
 
     xAxis = new Rickshaw.Graph.Axis.Time
       graph: @detailGraph
@@ -128,6 +131,14 @@ class PG.DataGraph
     yAxis = new Rickshaw.Graph.Axis.Y
       graph: @detailGraph
     yAxis.render()
+
+    detail = new Rickshaw.Graph.HoverDetail
+      graph: @detailGraph
+
+    smoother = new Rickshaw.Graph.Smoother
+      graph: @detailGraph
+
+    smoother.setScale @options.detailSmoothing
 
     @graphs.push @detailGraph
     @detailGraph.render()
@@ -145,6 +156,11 @@ class PG.DataGraph
     xAxis = new Rickshaw.Graph.Axis.Time
       graph: @overviewGraph
     xAxis.render()
+
+    smoother = new Rickshaw.Graph.Smoother
+      graph: @overviewGraph
+
+    smoother.setScale @options.overviewSmoothing
 
     @overviewGraph.render()
     @graphs.push @overviewGraph

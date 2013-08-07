@@ -4,6 +4,7 @@
 
   $(function() {
     new PG.DataGraph("#demo", "https://pganalyze.com/databases/1/data/all_queries", {
+      detailSmoothing: 20,
       series: {
         "unclassified": {
           name: "unclassified",
