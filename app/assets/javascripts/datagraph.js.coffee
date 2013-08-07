@@ -60,9 +60,11 @@ class PG.DataGraph
       @calendarFrom.datepicker
         onSelect: @calendarDateSelected
         dateFormat: @options.dateFormat
+        showAnim: ""
       @calendarTo.datepicker
         onSelect: @calendarDateSelected
         dateFormat: @options.dateFormat
+        showAnim: ""
       @datePickers.append $calendar
       if @options.datePickers.length
         for datePicker, i in @options.datePickers
