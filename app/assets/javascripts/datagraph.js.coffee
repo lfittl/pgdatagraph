@@ -14,12 +14,20 @@ class PG.DataGraph
     dateFormat: "dd.mm.yy"
     palette: {
       "default": {
-        color: "rgba(192,132,255,0.3)"
+        color: "rgba(192,132,255,0.5)"
         stroke: "rgba(0,0,0,0.15)"
       }
       "table_size": {
-        color: "rgba(241,196,15,0.3)"
+        color: "rgba(241,196,15,0.5)"
         stroke: "rgba(241,196,15,1.0)"
+      }
+      "unclassified": {
+        color: "rgba(39,174,96,0.5)"
+        stroke: "rgba(39,174,96,1.0)"
+      }
+      "OLTP": {
+        color: "rgba(192,57,43,0.5)"
+        stroke: "rgba(192,57,43,1.0)"
       }
     }
     series: {
@@ -74,7 +82,11 @@ class PG.DataGraph
 
     $.ajax
       dataType: "jsonp"
-      url: "#{@url}&start=#{@calendarFrom.datepicker('getDate').getTime()/1000}&end=#{@calendarTo.datepicker('getDate').getTime()/1000}"
+      url: "#{@url}"
+      data: {
+        start: @calendarFrom.datepicker('getDate').getTime() / 1000
+        end: @calendarTo.datepicker('getDate').getTime() / 1000
+      }
       type: "get"
       success: (data, status, xhr) =>
         series = @getSeries(data)
