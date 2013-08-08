@@ -104,13 +104,16 @@ class PG.DataGraph
       renderer = @options.series[name]?.renderer or @options.renderer
       seriesName = @options.series[name]?.name or name
       @seriesDataNames[seriesName] = name
-      series.push {
+      s = {
         data: seriesData
         name: seriesName
         renderer: renderer
         stroke: stroke
         color: color.fill
       }
+      if @options.series[name]?.disabled
+        s.disabled = yes
+      series.push s
     series
 
   renderLoaders: ->
@@ -256,4 +259,3 @@ class PG.DataGraph
         @updateSeries()
         @updateLegend() if @options.legend
         @options.dataSelectionChanged @rangeStart, @rangeEnd, @getActiveSeriesNames()
-
