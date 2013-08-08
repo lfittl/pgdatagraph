@@ -28,6 +28,7 @@ class PG.DataGraph
     @options = $.extend yes, @defaults, options
     @graphs  = []
     @palette = new PG.Palette()
+    @seriesColors = {}
 
     @renderLoaders()
 
@@ -79,10 +80,14 @@ class PG.DataGraph
     series = []
     _(data).each (seriesData, name) =>
       seriesData = _.map seriesData, (s) -> { x: s[0], y: s[1] }
-      if @options.series[name]?.color?
-        color = @palette.colors[@options.series[name].color]
+      if @seriesColors[name]?
+        color = @seriesColors[name]
       else
-        color = @palette.random()
+        if @options.series[name]?.color?
+          color = @palette.colors[@options.series[name].color]
+        else
+          color = @palette.random()
+        @seriesColors[name] = color
       if renderer is "area"
         stroke = no
       else
