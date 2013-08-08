@@ -36,6 +36,9 @@ class PG.DataGraph
     detailSmoothing: 10
     overviewSmoothing: 10
     yAxisTickFormat: (y) -> y
+    hoverDetailYFormat: (y) -> y.toFixed(2)
+    hoverDetailLabelFormat: (series, x, y, formattedX, formattedY, d) ->
+      "#{series.name}:&nbsp;#{formattedY}"
 
   constructor: (element, @url, options) ->
     @element = $(element)
@@ -133,6 +136,8 @@ class PG.DataGraph
 
     detail = new Rickshaw.Graph.HoverDetail
       graph: @detailGraph
+      yFormatter: @options.hoverDetailYFormat
+      formatter: @options.hoverDetailLabelFormat
 
     smoother = new Rickshaw.Graph.Smoother
       graph: @detailGraph
