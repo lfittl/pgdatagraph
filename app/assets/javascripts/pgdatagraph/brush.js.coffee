@@ -45,7 +45,6 @@ class PG.Brush
     startIndex  = 0 if !startIndex? or startIndex < 0
     endIndex    = @domainValues.length - 1 if !endIndex? or endIndex < 0
 
-    console.log "PG.Brush#getRange: ", [@domainValues[startIndex], @domainValues[endIndex]]
     @options.rangeChanged @domainValues[startIndex], @domainValues[endIndex]
 
   updateCover: (event, ui) =>
