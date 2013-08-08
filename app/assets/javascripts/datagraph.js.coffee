@@ -11,7 +11,7 @@ class PG.DataGraph
       { label: "last 2 weeks",  duration: "-2w" },
       { label: "last 24 hours", duration: "-1d" }
     ]
-    dateFormat: "dd.mm.yy"
+    dateFormat: "M d, yy"
     palette: {
       "default": {
         color: "rgba(192,132,255,0.5)"
