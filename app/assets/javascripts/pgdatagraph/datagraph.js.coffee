@@ -92,6 +92,7 @@ class PG.DataGraph
       @element.append @overview
 
   getSeries: (data) ->
+    @seriesDataNames = {}
     series = []
     _(data).each (seriesData, name) =>
       seriesData = _.map seriesData, (s) -> { x: s[0], y: s[1] }
@@ -99,6 +100,7 @@ class PG.DataGraph
       stroke = if renderer is "area" then no else palette.stroke
       renderer = @options.series[name]?.renderer or @options.series.renderer
       seriesName = @options.series[name]?.name or name
+      @seriesDataNames[seriesName] = name
       series.push {
         data: seriesData
         name: seriesName
@@ -177,8 +179,8 @@ class PG.DataGraph
     @rangeEnd = @brush.max
 
   getActiveSeriesNames: ->
-    _.compact _.map @graphs[0].series, (s) ->
-      s.name unless s.disabled
+    _.compact _.map @graphs[0].series, (s) =>
+      @seriesDataNames[s.name] unless s.disabled
 
   overviewRangeChanged: (start, end) =>
     @element.addClass "#{@options.className}_loading-details"
