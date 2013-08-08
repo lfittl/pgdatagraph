@@ -23,6 +23,8 @@ class PG.Brush
     @containerWidth = @container.width()
     @percentPx      = 100 / @containerWidth
 
+    @element.width @containerWidth
+
     @element.draggable
       axis: "x"
       containment: @container
