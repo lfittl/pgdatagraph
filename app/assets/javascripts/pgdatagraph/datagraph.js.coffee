@@ -234,8 +234,9 @@ class PG.DataGraph
       success: (data, status, xhr) =>
         @element.removeClass "#{@options.className}_loading"
         series = @getSeries(data)
+        @graphs = []
         @renderDetailGraph(series)
         @renderOverviewGraph(series)
-        @updateLegend() if @options.legend
         @updateSeries()
+        @updateLegend() if @options.legend
 
