@@ -47,7 +47,9 @@ class PG.Brush
     startIndex  = 0 if !startIndex? or startIndex < 0
     endIndex    = @domainValues.length - 1 if !endIndex? or endIndex < 0
 
-    @options.rangeChanged @domainValues[startIndex], @domainValues[endIndex]
+    startValue = @domainValues[startIndex] or @domainValues[0]
+    endValue   = @domainValues[endIndex] or @domainValues[@domainValues.length - 1]
+    @options.rangeChanged startValue, endValue
 
   updateCover: (event, ui) =>
     @coverLeft.css
