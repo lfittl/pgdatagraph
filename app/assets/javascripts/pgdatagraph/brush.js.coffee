@@ -37,7 +37,7 @@ class PG.Brush
       stop: @getRange
       resize: @updateCover
 
-    @resizeHandleWidth = @element.find(".ui-resizable-handle").width() - 1
+    @resizeHandleWidth = @element.find(".ui-resizable-handle").width() - 2
 
   getRange: (event, ui) =>
     left        = ui.position.left

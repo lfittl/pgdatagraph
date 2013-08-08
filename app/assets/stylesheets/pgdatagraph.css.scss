@@ -182,7 +182,7 @@
   position: absolute;
   font-size: 0.1px;
   display: block;
-  background-color: #e5e5e5;
+  background: #e5e5e5 url(image_path("pgdatagraph/drag-handle.png")) center center no-repeat;
   border: 1px solid #bbbbbb;
   box-shadow: inset rgba(255, 255, 255, .4) 0 1px 1px, rgba(0,0,0,.3) 0 0px 3px;
   height: 41px;
@@ -196,12 +196,12 @@
 
 .ui-resizable-e {
   cursor: e-resize;
-  width: 6px;
+  width: 7px;
   right: -5px;
 }
 .ui-resizable-w {
   cursor: w-resize;
-  width: 6px;
+  width: 7px;
   left: -5px;
 }
 
