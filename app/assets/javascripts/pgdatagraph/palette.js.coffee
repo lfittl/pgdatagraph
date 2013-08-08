@@ -31,11 +31,15 @@ class PG.Palette
     violetRed:
       stroke: "#b42b58"
       fill: "#ed789e"
+  fallbackColor:
+    stroke: "#ccc"
+    fill: "#ccc"
 
   color: ->
     unused = _.compact _(@colors).map (colors, name) =>
       name unless @colors[name].used
-    @colors[unused[0]].used = yes
-    @colors[unused[0]]
-
-
+    if unused[0]
+      @colors[unused[0]].used = yes
+      @colors[unused[0]]
+    else
+      @fallbackColor
