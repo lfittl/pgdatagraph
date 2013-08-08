@@ -39,7 +39,7 @@ class PG.DataGraph
     hoverDetailYFormat: (y) -> y.toFixed(2)
     hoverDetailLabelFormat: (series, x, y, formattedX, formattedY, d) ->
       "#{series.name}:&nbsp;#{formattedY}"
-    overviewRangeChanged: $.noop
+    dataSelectionChanged: $.noop
 
   constructor: (element, @url, options) ->
     @element = $(element)
@@ -173,6 +173,8 @@ class PG.DataGraph
     @brush = new PG.Brush @overview, @overviewGraph,
       className: "#{@options.className}__brush"
       rangeChanged: @overviewRangeChanged
+    @rangeStart = @brush.min
+    @rangeEnd = @brush.max
 
   getActiveSeriesNames: ->
     _.compact _.map @graphs[0].series, (s) ->
@@ -180,7 +182,9 @@ class PG.DataGraph
 
   overviewRangeChanged: (start, end) =>
     @element.addClass "#{@options.className}_loading-details"
-    @options.overviewRangeChanged(start, end, @getActiveSeriesNames())
+    @rangeStart = start
+    @rangeEnd = end
+    @options.dataSelectionChanged(start, end, @getActiveSeriesNames())
     $.ajax
       dataType: "jsonp"
       url: "#{@url}"
@@ -202,6 +206,7 @@ class PG.DataGraph
     @legend = new PG.Legend @legendContainer, @graphs, {
       onToggle: (seriesStates) =>
         @seriesStates = seriesStates
+        @options.dataSelectionChanged(@rangeStart, @rangeEnd, @getActiveSeriesNames())
     }
 
   updateSeries: =>
