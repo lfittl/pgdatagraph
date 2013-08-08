@@ -281,6 +281,7 @@
   line-height: normal;
   padding: 0px;
   text-shadow: none;
+  font-weight: bold;
 }
 .rickshaw_legend .action:hover {
   opacity: 0.6;
@@ -295,6 +296,9 @@
 .rickshaw_legend .line.disabled {
   opacity: 0.4;
 }
+.rickshaw_legend .line.disabled .label {
+  font-weight: normal;
+}
 .rickshaw_legend ul {
   list-style-type: none;
   margin: 0;
@@ -304,7 +308,8 @@
 }
 .rickshaw_legend li {
   padding: 0 5px 0 0;
-  min-width: 70px;
+  margin-right: 10px;
+  min-width: 50px;
   white-space: nowrap;
 }
 .rickshaw_legend li:hover {

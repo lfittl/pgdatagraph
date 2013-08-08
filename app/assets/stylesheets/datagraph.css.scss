@@ -5,7 +5,7 @@ body {
 .datagraph {
   -webkit-font-smoothing: antialiased;
   width: 600px;
-  margin: 30px auto;
+  margin: 0 0 20px 5px;
   position: relative;
 
   .datagraph__loader {
@@ -17,6 +17,7 @@ body {
     right: -5px;
     z-index: 3;
     background: #fff;
+    border-radius: 3px;
   }
 
   .datagraph__detail-loader {
@@ -24,7 +25,7 @@ body {
     position: absolute;
     left: 0;
     top: 0;
-    bottom: 85px;
+    bottom: 70px;
     right: 0;
     z-index: 3;
     background: rgba(255,255,255,.8);
@@ -36,17 +37,19 @@ body {
     font-size: 20px;
     font-weight: bold;
     color: #666;
-    position: absolute;
     padding-left: 40px;
     line-height: 32px;
-    top: 50%;
-    margin-top: -32px/2;
-    margin-left: 32px;
+    margin: 55px auto 0 auto;
+    width: 12em;
+    display: block;
   }
 
   &.datagraph_loading {
     .datagraph__loader {
       display: block;
+    }
+    .datagraph__loader-label {
+      margin-top: 80px;
     }
   }
 
@@ -57,10 +60,10 @@ body {
   }
 
   .datagraph__detail {
-    height: 200px;
+    height: 130px;
   }
   .datagraph__datepickers {
-    height: 40px;
+    height: 35px;
     overflow: hidden;
 
     .datagraph__datepicker {
@@ -68,9 +71,10 @@ body {
       border-right: 0;
       font-weight: bold;
       font-size: 11px;
-      padding: 2px 5px;
+      line-height: 1em;
+      padding: 3px 5px 2px;
       float: left;
-      margin: 10px 0 0 0;
+      margin: 4px 0 0 0;
       cursor: pointer;
 
       &.datagraph__datepicker_first {
@@ -92,7 +96,7 @@ body {
     .datagraph__calendar {
       border: 1px solid #222;
       float: right;
-      margin: 10px 0 0 0;
+      margin: 4px 0 0 0;
       overflow: hidden;
       border-radius: 3px;
     }
@@ -105,11 +109,11 @@ body {
       font-family: Helvetica, Arial, sans-serif;
       margin: 0;
       display: block;
-      width: 65px;
-      height: 18px;
-      line-height: 19px;
+      width: 58px;
+      height: 15px;
+      line-height: 16px;
       float: left;
-      padding: 0 5px;
+      padding: 0 3px;
       text-align: center;
       position: relative;
       z-index: 1;
@@ -136,10 +140,11 @@ body {
 
     .datagraph__calendar-dash {
       float: left;
+      line-height: 14px;
     }
   }
   .datagraph__overview {
-    height: 50px;
+    height: 35px;
     position: relative;
 
     .svg {
@@ -151,7 +156,7 @@ body {
       left: 0;
       z-index: 2;
       width: 598px;
-      height: 50px;
+      height: 35px;
       position: absolute;
       cursor: move;
     }
@@ -163,7 +168,7 @@ body {
   z-index: 2;
   background: rgba(0, 0, 0, .2);
   top: 0;
-  height: 50px;
+  height: 35px;
 }
 
 .ui-resizable-handle {
@@ -173,7 +178,7 @@ body {
   background-color: #424242;
   border: 1px solid #222222;
   box-shadow: inset rgba(255, 255, 255, .4) 0 1px 1px;
-  height: 56px;
+  height: 41px;
   top: -4px;
   border-radius: 3px;
 }
