@@ -1,5 +1,4 @@
 # Graph looks weird with series that have extreme drops to x: 0
-# Series label get messed up when dragging brush
 
 class PG.DataGraph
 
@@ -13,9 +12,7 @@ class PG.DataGraph
       { label: "last 24 hours", duration: "-1d" }
     ]
     dateFormat: "M d, yy"
-    series: {
-      renderer: "line"
-    }
+    renderer: "line"
     detailSmoothing: 10
     overviewSmoothing: 10
     yAxisTickFormat: (y) -> y
@@ -79,8 +76,19 @@ class PG.DataGraph
   getSeries: (data) ->
     @seriesDataNames = {}
     series = []
-    _(data).each (seriesData, name) =>
-      seriesData = _.map seriesData, (s) -> { x: s[0], y: s[1] }
+
+    initialOrder = _.keys(data)
+
+    if @options.series
+      seriesOrder = _.keys(@options.series)
+      for name in seriesOrder
+        initialOrder = _.without initialOrder, name
+      initialOrder = seriesOrder.concat(initialOrder)
+
+    @seriesOrder = initialOrder unless @seriesOrder?
+
+    for name in @seriesOrder
+      seriesData = _.map data[name], (s) -> { x: s[0], y: s[1] }
       if @seriesColors[name]?
         color = @seriesColors[name]
       else
@@ -93,7 +101,7 @@ class PG.DataGraph
         stroke = no
       else
         stroke = color.stroke
-      renderer = @options.series[name]?.renderer or @options.series.renderer
+      renderer = @options.series[name]?.renderer or @options.renderer
       seriesName = @options.series[name]?.name or name
       @seriesDataNames[seriesName] = name
       series.push {
