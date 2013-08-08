@@ -252,4 +252,5 @@ class PG.DataGraph
         @renderOverviewGraph(series)
         @updateSeries()
         @updateLegend() if @options.legend
+        @options.dataSelectionChanged @rangeStart, @rangeEnd, @getActiveSeriesNames()
 
