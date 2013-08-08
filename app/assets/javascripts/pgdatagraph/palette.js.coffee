@@ -32,11 +32,10 @@ class PG.Palette
       stroke: "#b42b58"
       fill: "#ed789e"
 
-  random: ->
-    unused = _(@colors).map (colors, name) =>
+  color: ->
+    unused = _.compact _(@colors).map (colors, name) =>
       name unless @colors[name].used
-    randomKey = unused[Math.floor(Math.random() * unused.length)]
-    @colors[randomKey].used = yes
-    @colors[randomKey]
+    @colors[unused[0]].used = yes
+    @colors[unused[0]]
 
 

@@ -1,4 +1,5 @@
 # Graph looks weird with series that have extreme drops to x: 0
+# Series label get messed up when dragging brush
 
 class PG.DataGraph
 
@@ -86,7 +87,7 @@ class PG.DataGraph
         if @options.series[name]?.color?
           color = @palette.colors[@options.series[name].color]
         else
-          color = @palette.random()
+          color = @palette.color()
         @seriesColors[name] = color
       if renderer is "area"
         stroke = no
