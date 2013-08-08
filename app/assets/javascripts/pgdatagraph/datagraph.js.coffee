@@ -90,6 +90,7 @@ class PG.DataGraph
 
     for name in @seriesOrder
       seriesData = _.map data[name], (s) -> { x: s[0], y: s[1] }
+      continue if seriesData.length == 0
       if @seriesColors[name]?
         color = @seriesColors[name]
       else
