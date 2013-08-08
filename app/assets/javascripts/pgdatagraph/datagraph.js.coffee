@@ -12,24 +12,6 @@ class PG.DataGraph
       { label: "last 24 hours", duration: "-1d" }
     ]
     dateFormat: "M d, yy"
-    palette: {
-      "default": {
-        color: "rgba(192,132,255,0.5)"
-        stroke: "rgba(0,0,0,0.15)"
-      }
-      "table_size": {
-        color: "rgba(241,196,15,0.5)"
-        stroke: "rgba(241,196,15,1.0)"
-      }
-      "unclassified": {
-        color: "rgba(39,174,96,0.5)"
-        stroke: "rgba(39,174,96,1.0)"
-      }
-      "OLTP": {
-        color: "rgba(192,57,43,0.5)"
-        stroke: "rgba(192,57,43,1.0)"
-      }
-    }
     series: {
       renderer: "line"
     }
@@ -45,6 +27,7 @@ class PG.DataGraph
     @element = $(element)
     @options = $.extend yes, @defaults, options
     @graphs  = []
+    @palette = new PG.Palette()
 
     @renderLoaders()
 
@@ -96,8 +79,14 @@ class PG.DataGraph
     series = []
     _(data).each (seriesData, name) =>
       seriesData = _.map seriesData, (s) -> { x: s[0], y: s[1] }
-      palette = @options.palette[name] or @options.palette.default
-      stroke = if renderer is "area" then no else palette.stroke
+      if @options.series[name]?.color?
+        color = @palette.colors[@options.series[name].color]
+      else
+        color = @palette.random()
+      if renderer is "area"
+        stroke = no
+      else
+        stroke = color.stroke
       renderer = @options.series[name]?.renderer or @options.series.renderer
       seriesName = @options.series[name]?.name or name
       @seriesDataNames[seriesName] = name
@@ -106,7 +95,7 @@ class PG.DataGraph
         name: seriesName
         renderer: renderer
         stroke: stroke
-        color: palette.color
+        color: color.fill
       }
     series
 
