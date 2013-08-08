@@ -39,6 +39,7 @@ class PG.DataGraph
     hoverDetailYFormat: (y) -> y.toFixed(2)
     hoverDetailLabelFormat: (series, x, y, formattedX, formattedY, d) ->
       "#{series.name}:&nbsp;#{formattedY}"
+    overviewRangeChanged: $.noop
 
   constructor: (element, @url, options) ->
     @element = $(element)
@@ -173,8 +174,13 @@ class PG.DataGraph
       className: "#{@options.className}__brush"
       rangeChanged: @overviewRangeChanged
 
+  getActiveSeriesNames: ->
+    _.compact _.map @graphs[0].series, (s) ->
+      s.name unless s.disabled
+
   overviewRangeChanged: (start, end) =>
     @element.addClass "#{@options.className}_loading-details"
+    @options.overviewRangeChanged(start, end, @getActiveSeriesNames())
     $.ajax
       dataType: "jsonp"
       url: "#{@url}"
