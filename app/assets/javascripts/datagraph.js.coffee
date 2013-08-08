@@ -35,6 +35,7 @@ class PG.DataGraph
     }
     detailSmoothing: 10
     overviewSmoothing: 10
+    yAxisTickFormat: (y) -> y
 
   constructor: (element, @url, options) ->
     @element = $(element)
@@ -127,6 +128,7 @@ class PG.DataGraph
 
     yAxis = new Rickshaw.Graph.Axis.Y
       graph: @detailGraph
+      tickFormat: @options.yAxisTickFormat
     yAxis.render()
 
     detail = new Rickshaw.Graph.HoverDetail
