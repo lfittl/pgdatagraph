@@ -98,7 +98,7 @@ class PG.DataGraph
       palette = @options.palette[name] or @options.palette.default
       stroke = if renderer is "area" then no else palette.stroke
       renderer = @options.series[name]?.renderer or @options.series.renderer
-      seriesName = @options.series[name].name or name
+      seriesName = @options.series[name]?.name or name
       series.push {
         data: seriesData
         name: seriesName
