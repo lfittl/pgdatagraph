@@ -11,6 +11,7 @@ class PG.DataGraph
       { label: "last 2 weeks",  duration: "-2w" },
       { label: "last 24 hours", duration: "-1d" }
     ]
+    series: {}
     dateFormat: "M d, yy"
     renderer: "line"
     detailSmoothing: 10
