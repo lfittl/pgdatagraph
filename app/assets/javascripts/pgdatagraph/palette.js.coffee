@@ -1,6 +1,6 @@
 class PG.Palette
 
-  colors:
+  defaults:
     red:
       stroke: "#b64639"
       fill: "#dc6355"
@@ -31,9 +31,13 @@ class PG.Palette
     violetRed:
       stroke: "#b42b58"
       fill: "#ed789e"
+
   fallbackColor:
     stroke: "#ccc"
     fill: "#ccc"
+
+  constructor: (colors = {}) ->
+    @colors = $.extend yes, colors, @defaults
 
   color: ->
     unused = _.compact _(@colors).map (colors, name) =>
