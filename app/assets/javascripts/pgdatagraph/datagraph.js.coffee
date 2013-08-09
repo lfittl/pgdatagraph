@@ -144,11 +144,14 @@ class PG.DataGraph
 
     xAxis = new Rickshaw.Graph.Axis.Time
       graph: @detailGraph
+      ticksTreatment: "glow"
     xAxis.render()
 
     yAxis = new Rickshaw.Graph.Axis.Y
       graph: @detailGraph
       tickFormat: @options.yAxisTickFormat
+      ticksTreatment: "glow"
+      pixelsPerTick: @options.pixelsPerTick or 25
     yAxis.render()
 
     detail = new Rickshaw.Graph.HoverDetail
@@ -179,6 +182,7 @@ class PG.DataGraph
       series: series
       renderer: "multi"
       unstack: @options.unstack
+      ticksTreatment: "glow"
 
     xAxis = new Rickshaw.Graph.Axis.Time
       graph: @overviewGraph
