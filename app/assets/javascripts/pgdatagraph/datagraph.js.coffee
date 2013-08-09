@@ -14,6 +14,7 @@ class PG.DataGraph
     series: {}
     dateFormat: "M d, yy"
     renderer: "line"
+    unstack: no
     detailSmoothing: 10
     overviewSmoothing: 10
     yAxisTickFormat: (y) -> y
@@ -138,6 +139,7 @@ class PG.DataGraph
       series: series
       renderer: "multi"
       dotSize: 2
+      unstack: @options.unstack
 
     xAxis = new Rickshaw.Graph.Axis.Time
       graph: @detailGraph
@@ -175,6 +177,7 @@ class PG.DataGraph
       preserve: yes
       series: series
       renderer: "multi"
+      unstack: @options.unstack
 
     xAxis = new Rickshaw.Graph.Axis.Time
       graph: @overviewGraph
