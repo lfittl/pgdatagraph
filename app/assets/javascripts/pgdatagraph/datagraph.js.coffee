@@ -21,6 +21,7 @@ class PG.DataGraph
     hoverDetailLabelFormat: (series, x, y, formattedX, formattedY, d) ->
       "#{series.name}:&nbsp;#{formattedY}"
     dataSelectionChanged: $.noop
+    hoverDetailClicked: $.noop
 
   constructor: (element, @url, options) ->
     @element = $(element)
@@ -73,6 +74,8 @@ class PG.DataGraph
     if @options.overview
       @overview = $("<div class='#{@options.className}__overview'></div>")
       @element.append @overview
+
+    $(@detail).on "click", @hoverDetailClicked
 
   getSeries: (data) ->
     @seriesDataNames = {}
@@ -149,6 +152,11 @@ class PG.DataGraph
       graph: @detailGraph
       yFormatter: @options.hoverDetailYFormat
       formatter: @options.hoverDetailLabelFormat
+      onRender: (detail) =>
+        point = detail.points.filter((p) -> p.active).shift()
+        @currentDetail =
+          x: detail.domainX
+          series: point.series
 
     smoother = new Rickshaw.Graph.Smoother
       graph: @detailGraph
@@ -241,6 +249,9 @@ class PG.DataGraph
     @element.find(".#{@options.className}__datepicker_active").removeClass("#{@options.className}__datepicker_active")
     @calendar.addClass "#{@options.className}__calendar_active"
     @updateTimeframe()
+
+  hoverDetailClicked: =>
+    @options.hoverDetailClicked @seriesDataNames[@currentDetail.series.name], parseInt(@currentDetail.x, 10)
 
   updateTimeframe: =>
     @element.addClass "#{@options.className}_loading"
