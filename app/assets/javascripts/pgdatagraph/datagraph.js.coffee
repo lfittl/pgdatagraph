@@ -26,7 +26,8 @@ class PG.DataGraph
 
   constructor: (element, @url, options) ->
     @element = $(element)
-    @options = $.extend yes, @defaults, options
+    defaults = $.extend yes, {}, @defaults
+    @options = $.extend yes, defaults, options
     @graphs  = []
     @palette = new PG.Palette()
     @seriesColors = {}

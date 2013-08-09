@@ -6,7 +6,8 @@ class PG.Legend
 
   constructor: (container, @graphs, options) ->
     @container = $(container)
-    @options = $.extend @defaults, options
+    defaults = $.extend {}, @defaults
+    @options = $.extend defaults, options
     @element = $("<div></div>").addClass(@options.className)
     @container.append @element
 

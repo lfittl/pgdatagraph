@@ -5,7 +5,8 @@ class PG.Brush
     rangeChanged: $.noop
 
   constructor: (container, @graph, options) ->
-    @options    = $.extend @defaults, options
+    defaults    = $.extend {}, @defaults
+    @options    = $.extend defaults, options
     @container  = $(container)
     @element    = $("<div class='brush'></div>").addClass(@options.className)
     @coverLeft  = $("<div class='brush-cover brush-cover_left'></div>")
