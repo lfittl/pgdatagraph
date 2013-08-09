@@ -18,7 +18,7 @@ class PG.Legend
     instance = @
     @graphSeries = {}
     for line, i in @legend.lines
-      $label = $(line.element).find("span").first()
+      $label = $(line.element).find("span").first().add($(line.element).find(".swatch"))
       $label.attr "rel", line.series.name
       @graphSeries[line.series.name] =
         series   : _.map @graphs, (graph) -> graph.series[i]
