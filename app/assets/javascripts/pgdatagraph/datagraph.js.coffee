@@ -146,6 +146,7 @@ class PG.DataGraph
       graph: @detailGraph
       ticksTreatment: "glow"
     xAxis.render()
+    _.defer => @wrapXAxis(@detail) unless PG.msie
 
     yAxis = new Rickshaw.Graph.Axis.Y
       graph: @detailGraph
@@ -187,6 +188,7 @@ class PG.DataGraph
     xAxis = new Rickshaw.Graph.Axis.Time
       graph: @overviewGraph
     xAxis.render()
+    _.defer => @wrapXAxis(@overview) unless PG.msie
 
     smoother = new Rickshaw.Graph.Smoother
       graph: @overviewGraph
@@ -201,6 +203,11 @@ class PG.DataGraph
       rangeChanged: @overviewRangeChanged
     @rangeStart = @brush.min
     @rangeEnd = @brush.max
+
+  wrapXAxis: ($container) ->
+    $xAxisContainer = $("<div class='x-axis-container'></div>")
+    $container.find("svg").after $xAxisContainer
+    $xAxisContainer.append $container.find(".x_tick")
 
   getActiveSeriesNames: ->
     _.compact _.map @graphs[0].series, (s) =>
