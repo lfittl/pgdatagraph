@@ -158,6 +158,7 @@ class PG.DataGraph
     detail = new Rickshaw.Graph.HoverDetail
       graph: @detailGraph
       yFormatter: @options.hoverDetailYFormat
+      xFormatter: (x) -> new Date(x * 1000).toUTCString().replace("GMT", "UTC")
       formatter: @options.hoverDetailLabelFormat
       onRender: (detail) =>
         point = detail.points.filter((p) -> p.active).shift()
