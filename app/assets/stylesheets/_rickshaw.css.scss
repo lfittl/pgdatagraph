@@ -257,6 +257,13 @@
   margin-bottom: 8px;
   border-radius: 2px;
   position: relative;
+
+  /* Make the text unselectable, since its just confusing with the toggle effect and unnecessary */
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 .rickshaw_legend:hover {
   z-index: 10;
