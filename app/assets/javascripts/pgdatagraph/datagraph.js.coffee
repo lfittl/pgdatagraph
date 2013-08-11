@@ -14,7 +14,7 @@ class PG.DataGraph
     series: {}
     dateFormat: "M d, yy"
     renderer: "line"
-    unstack: no
+    unstack: true
     detailSmoothing: 10
     overviewSmoothing: 10
     yAxisTickFormat: (y) -> y
