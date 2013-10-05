@@ -91,7 +91,7 @@ class PG.DataGraph
         initialOrder = _.without initialOrder, name
       initialOrder = seriesOrder.concat(initialOrder)
 
-    @seriesOrder = initialOrder unless @seriesOrder?
+    @seriesOrder = initialOrder unless @seriesOrder? && @seriesOrder.slice(0).sort() == initialOrder.slice(0).sort()
 
     for name in @seriesOrder
       seriesData = _.map data[name], (s) -> { x: s[0], y: s[1] }
