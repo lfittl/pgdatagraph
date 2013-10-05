@@ -140,6 +140,8 @@ class PG.DataGraph
       series: series
       renderer: "multi"
       interpolation: "linear"
+      padding:
+        top: 0.1
       dotSize: 2
       unstack: @options.unstack
 
@@ -185,6 +187,8 @@ class PG.DataGraph
       series: series
       renderer: "multi"
       interpolation: "linear"
+      padding:
+        top: 0.1
       unstack: @options.unstack
       ticksTreatment: "glow"
 
