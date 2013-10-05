@@ -206,6 +206,7 @@
 }
 
 .ui-datepicker {
+  z-index: 100 !important; /* Place above the brush */
   width: 15em;
   padding: .2em .2em 0;
   display: none;
