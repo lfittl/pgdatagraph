@@ -224,7 +224,7 @@ class PG.DataGraph
     @element.addClass "#{@options.className}_loading-details"
     @rangeStart = start
     @rangeEnd = end
-    @options.dataSelectionChanged(start, end, @getActiveSeriesNames())
+    @options.dataSelectionChanged(start, end, @getActiveSeriesNames(), @seriesColors)
     $.ajax
       dataType: "jsonp"
       url: "#{@url}"
@@ -246,7 +246,7 @@ class PG.DataGraph
     @legend = new PG.Legend @legendContainer, @graphs, {
       onToggle: (seriesStates) =>
         @seriesStates = seriesStates
-        @options.dataSelectionChanged(@rangeStart, @rangeEnd, @getActiveSeriesNames())
+        @options.dataSelectionChanged(@rangeStart, @rangeEnd, @getActiveSeriesNames(), @seriesColors)
     }
 
   updateSeries: =>
@@ -293,4 +293,4 @@ class PG.DataGraph
         @renderOverviewGraph(series)
         @updateSeries()
         @updateLegend() if @options.legend
-        @options.dataSelectionChanged @rangeStart, @rangeEnd, @getActiveSeriesNames()
+        @options.dataSelectionChanged @rangeStart, @rangeEnd, @getActiveSeriesNames(), @seriesColors
