@@ -282,7 +282,7 @@ class PG.DataGraph
       url: "#{@url}"
       data: {
         start: @calendarFrom.datepicker('getDate').getTime() / 1000
-        end: @calendarTo.datepicker('getDate').getTime() / 1000
+        end: @calendarTo.datepicker('getDate').getTime() / 1000 + (60*60*24 - 1)
       }
       type: "get"
       success: (data, status, xhr) =>
