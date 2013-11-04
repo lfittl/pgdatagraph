@@ -3,7 +3,7 @@ pgdatagraph
 
 ![Screenshot of pgdatagraph](https://raw.github.com/pganalyze/pgdatagraph/master/screenshot.png)
 
-Comfortable graphing library for time-series data - based on D3 and Rickshaw.
+Interactive widget for graphing time-series data - based on D3 and Rickshaw.
 
 Note that the repository is structured as a Ruby gem. If you don't use this as a library inside a Ruby project just copy the code from app/assets to your project directory.
 
@@ -30,7 +30,7 @@ There is three GET parameters we send:
 Authors
 -------
 
-- [Philipp Markovics](mailto:office@apoch.io)
+- [Philipp Markovics](mailto:philipp@apoch.io)
 - [Lukas Fittl](mailto:lukas@fittl.com)
 
 License
