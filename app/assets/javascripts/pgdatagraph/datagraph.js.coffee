@@ -11,6 +11,7 @@ class PG.DataGraph
       { label: "last 2 weeks",  duration: "-2w" },
       { label: "last 24 hours", duration: "-1d" }
     ]
+    defaultDuration: '-1d'
     series: {}
     dateFormat: "M d, yy"
     renderer: "line"
@@ -65,9 +66,10 @@ class PG.DataGraph
           @datePickers.append $datePicker
           if i is 0
             $datePicker.addClass("#{@options.className}__datepicker_first")
-            @selectDatePicker $datePicker
           if i is @options.datePickers.length - 1
             $datePicker.addClass("#{@options.className}__datepicker_last")
+          if datePicker.duration == @options.defaultDuration
+            @selectDatePicker $datePicker
 
     instance = @
     @datePickers.on "click", ".#{@options.className}__datepicker", (event) ->
