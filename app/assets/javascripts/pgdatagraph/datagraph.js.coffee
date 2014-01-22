@@ -7,11 +7,11 @@ class PG.DataGraph
     overview: yes
     legend: yes
     datePickers: [
-      { label: "last 30 days",  duration: "-1m" },
-      { label: "last 2 weeks",  duration: "-2w" },
-      { label: "last 24 hours", duration: "-1d" }
+      { label: "last 30 days",  duration: 30 },
+      { label: "last 2 weeks",  duration: 14 },
+      { label: "last 24 hours", duration: 1 }
     ]
-    defaultDuration: '-1d'
+    defaultDuration: 1
     series: {}
     dateFormat: "M d, yy"
     renderer: "line"
@@ -265,27 +265,28 @@ class PG.DataGraph
     activeClassName = "#{@options.className}__datepicker_active"
     @element.find(".#{activeClassName}").removeClass(activeClassName)
     $datePicker.addClass activeClassName
-    @calendarFrom.datepicker "setDate", $datePicker.attr("rel")
-    @calendarTo.datepicker "setDate", new Date()
-    @updateTimeframe()
+    start = moment().subtract('days', parseInt($datePicker.attr("rel")))
+    end   = moment()
+    @calendarFrom.datepicker "setDate", start.toDate()
+    @calendarTo.datepicker "setDate", end.toDate()
+    @updateTimeframe(start.unix(), end.unix())
 
   calendarDateSelected: =>
     @element.find(".#{@options.className}__datepicker_active").removeClass("#{@options.className}__datepicker_active")
     @calendar.addClass "#{@options.className}__calendar_active"
-    @updateTimeframe()
+    start = @calendarFrom.datepicker('getDate').getTime() / 1000
+    end   = @calendarTo.datepicker('getDate').getTime() / 1000 + (60*60*24 - 1)
+    @updateTimeframe(start, end)
 
   hoverDetailClicked: =>
     @options.hoverDetailClicked @seriesDataNames[@currentDetail.series.name], parseInt(@currentDetail.x, 10)
 
-  updateTimeframe: =>
+  updateTimeframe: (start, end) =>
     @element.addClass "#{@options.className}_loading"
     $.ajax
       dataType: "jsonp"
       url: "#{@url}"
-      data: {
-        start: @calendarFrom.datepicker('getDate').getTime() / 1000
-        end: @calendarTo.datepicker('getDate').getTime() / 1000 + (60*60*24 - 1)
-      }
+      data: {start: start, end: end}
       type: "get"
       success: (data, status, xhr) =>
         @element.removeClass "#{@options.className}_loading"
