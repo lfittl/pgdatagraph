@@ -36,6 +36,6 @@ Authors
 License
 -------
 
-Copyright (c) 2013 pganalyze
+Copyright (c) 2013-2014 pganalyze
 
 pgdatagraph is licensed under the 3-clause BSD license, see LICENSE file for details.
