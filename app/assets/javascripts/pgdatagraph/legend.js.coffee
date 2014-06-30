@@ -1,12 +1,12 @@
 class PG.Legend
 
-  defaults:
+  @defaults:
     className: "legend"
     onToggle: $.noop
 
   constructor: (container, @graphs, options) ->
     @container = $(container)
-    defaults = $.extend {}, @defaults
+    defaults = $.extend {}, @constructor.defaults
     @options = $.extend defaults, options
     @element = $("<div></div>").addClass(@options.className)
     @container.append @element

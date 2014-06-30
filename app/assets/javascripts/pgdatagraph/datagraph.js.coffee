@@ -1,8 +1,6 @@
-# Graph looks weird with series that have extreme drops to x: 0
-
 class PG.DataGraph
 
-  defaults:
+  @defaults:
     className: "datagraph"
     overview: yes
     legend: yes
@@ -27,7 +25,7 @@ class PG.DataGraph
 
   constructor: (element, @url, options) ->
     @element = $(element)
-    defaults = $.extend yes, {}, @defaults
+    defaults = $.extend yes, {}, @constructor.defaults
     @options = $.extend yes, defaults, options
     @graphs  = []
     @palette = new PG.Palette()

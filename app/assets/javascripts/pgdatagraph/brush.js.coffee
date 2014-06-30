@@ -1,11 +1,11 @@
 class PG.Brush
 
-  defaults:
+  @defaults:
     className: ""
     rangeChanged: $.noop
 
   constructor: (container, @graph, options) ->
-    defaults    = $.extend {}, @defaults
+    defaults    = $.extend {}, @constructor.defaults
     @options    = $.extend defaults, options
     @container  = $(container)
     @element    = $("<div class='brush'></div>").addClass(@options.className)

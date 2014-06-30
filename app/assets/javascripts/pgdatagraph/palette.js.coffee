@@ -1,6 +1,6 @@
 class PG.Palette
 
-  defaults:
+  @defaults:
     red:
       stroke: "#b64639"
       fill: "#dc6355"
@@ -37,7 +37,7 @@ class PG.Palette
     fill: "#ccc"
 
   constructor: (colors = {}) ->
-    @colors = $.extend yes, colors, @defaults
+    @colors = $.extend yes, colors, @constructor.defaults
 
   color: ->
     unused = _.compact _(@colors).map (colors, name) =>
