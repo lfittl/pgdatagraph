@@ -6,12 +6,12 @@ require 'pgdatagraph/version'
 Gem::Specification.new do |s|
   s.name        = "pgdatagraph"
   s.version     = Pgdatagraph::VERSION
-  s.authors     = ["Philipp Markovics"]
+  s.authors     = ["Philipp Markovics", "Lukas Fittl"]
   s.email       = ["team@pganalyze.com"]
-  s.homepage    = "http://pganalyze.com"
+  s.homepage    = "https://pganalyze.com"
   s.summary     = "D3/Rickshaw based chart library"
   s.description = "Nice charts for pganalyze."
-  s.license     = "Commercial"
+  s.license     = "BSD-3-Clause"
 
   s.required_rubygems_version = ">= 1.3.6"
 
