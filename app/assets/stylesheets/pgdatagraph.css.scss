@@ -52,6 +52,9 @@
     .datagraph__loader-label {
       margin-top: 80px;
     }
+    .datagraph__overview .datagraph__brush {
+      visibility: hidden;
+    }
   }
 
   &.datagraph_loading-details {
