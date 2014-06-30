@@ -12,6 +12,7 @@ class PG.DataGraph
     defaultDuration: 1
     series: {}
     dateFormat: "M d, yy"
+    timezone: "Etc/UTC"
     renderer: "line"
     unstack: true
     detailSmoothing: 10
@@ -148,6 +149,7 @@ class PG.DataGraph
     xAxis = new Rickshaw.Graph.Axis.Time
       graph: @detailGraph
       ticksTreatment: "glow"
+      timeFixture: new Rickshaw.Fixtures.TimeWithTimezone(@options.timezone)
     xAxis.render()
     _.defer => @wrapXAxis(@detail) unless PG.msie
 
@@ -161,7 +163,7 @@ class PG.DataGraph
     detail = new Rickshaw.Graph.HoverDetail
       graph: @detailGraph
       yFormatter: @options.hoverDetailYFormat
-      xFormatter: (x) -> new Date(x * 1000).toUTCString().replace("GMT", "UTC")
+      xFormatter: (x) => moment(x * 1000).tz(@options.timezone).format("llll zz")
       formatter: @options.hoverDetailLabelFormat
       onRender: (detail) =>
         point = detail.points.filter((p) -> p.active).shift()
@@ -194,6 +196,7 @@ class PG.DataGraph
 
     xAxis = new Rickshaw.Graph.Axis.Time
       graph: @overviewGraph
+      timeFixture: new Rickshaw.Fixtures.TimeWithTimezone(@options.timezone)
     xAxis.render()
     _.defer => @wrapXAxis(@overview) unless PG.msie
 
@@ -263,18 +266,29 @@ class PG.DataGraph
     activeClassName = "#{@options.className}__datepicker_active"
     @element.find(".#{activeClassName}").removeClass(activeClassName)
     $datePicker.addClass activeClassName
+
     start = moment().subtract('days', parseInt($datePicker.attr("rel")))
     end   = moment()
     @calendarFrom.datepicker "setDate", start.toDate()
     @calendarTo.datepicker "setDate", end.toDate()
+
+    # No need to convert these to requested timezone as intervals relative to now() are timezone-independent
     @updateTimeframe(start.unix(), end.unix())
 
   calendarDateSelected: =>
     @element.find(".#{@options.className}__datepicker_active").removeClass("#{@options.className}__datepicker_active")
     @calendar.addClass "#{@options.className}__calendar_active"
-    start = @calendarFrom.datepicker('getDate').getTime() / 1000
-    end   = @calendarTo.datepicker('getDate').getTime() / 1000 + (60*60*24 - 1)
-    @updateTimeframe(start, end)
+
+    # Only take the date from the datepicker
+    start = @calendarFrom.datepicker('getDate')
+    end   = @calendarTo.datepicker('getDate')
+    start = moment.tz({year: start.getFullYear(), month: start.getMonth(), day: start.getDate()}, @options.timezone)
+    end   = moment.tz({year: end.getFullYear(),   month: end.getMonth(),   day: end.getDate()},   @options.timezone)
+
+    # End date ends on the end of the day
+    end.add("d", 1)
+
+    @updateTimeframe(start.unix(), end.unix())
 
   hoverDetailClicked: =>
     @options.hoverDetailClicked @seriesDataNames[@currentDetail.series.name], parseInt(@currentDetail.x, 10)
