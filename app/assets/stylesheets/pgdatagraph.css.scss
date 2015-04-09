@@ -312,7 +312,7 @@
   float: left;
 }
 
-.x-axis-container {
+.x-axis-container, .primary-y-axis-container, .secondary-y-axis-container {
   overflow: hidden;
   position: absolute;
   width: 100%;

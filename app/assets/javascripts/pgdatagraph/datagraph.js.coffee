@@ -14,7 +14,7 @@ class PG.DataGraph
     dateFormat: "M d, yy"
     timezone: "Etc/UTC"
     renderer: "line"
-    unstack: true
+    stack: false
     detailSmoothing: 10
     overviewSmoothing: 10
     yAxisTickFormat: (y) -> y
@@ -23,6 +23,7 @@ class PG.DataGraph
       "#{series.name}:&nbsp;#{formattedY}"
     dataSelectionChanged: $.noop
     hoverDetailClicked: $.noop
+    secondaryAxis: null
 
   constructor: (element, @url, options) ->
     @element = $(element)
@@ -80,6 +81,41 @@ class PG.DataGraph
 
     $(@detail).on "click", @hoverDetailClicked
 
+  calculateSeriesData: (seriesData, name, scale, opts = {}) ->
+    if @seriesColors[name]?
+      color = @seriesColors[name]
+    else
+      if @options.series[name]?.color?
+        color = @palette.colors[@options.series[name].color]
+      else
+        color = @palette.color()
+      @seriesColors[name] = color
+
+    renderer = opts.renderer or @options.series[name]?.renderer or @options.renderer
+    seriesName = @options.series[name]?.name or name
+    @seriesDataNames[seriesName] = name
+
+    if renderer is "area"
+      stroke = no
+    else
+      stroke = color.stroke
+
+    s = {
+      data: seriesData
+      name: seriesName
+      renderer: renderer
+      stroke: stroke
+      color: color.fill
+      scale: scale
+      className: opts.className
+      yFormatter: opts.yFormatter
+    }
+
+    if @options.series[name]?.disabled
+      s.disabled = yes
+
+    s
+
   getSeries: (data) ->
     @seriesDataNames = {}
     series = []
@@ -94,34 +130,22 @@ class PG.DataGraph
 
     @seriesOrder = initialOrder unless @seriesOrder? && @seriesOrder.slice(0).sort() == initialOrder.slice(0).sort()
 
+    primaryMax = _.max(data[@seriesOrder[0]], (s) -> s[1])[1]
+    @primaryScale = d3.scale.linear().domain([0, primaryMax]).nice()
+
+    if @options.secondaryAxis?
+      secondaryMax = _.max(data[@seriesOrder[0]], (s) -> s[2])[2]
+      @secondaryScale = d3.scale.linear().domain([0, secondaryMax]).nice()
+
     for name in @seriesOrder
-      seriesData = _.map data[name], (s) -> { x: s[0], y: s[1] }
-      continue if seriesData.length == 0
-      if @seriesColors[name]?
-        color = @seriesColors[name]
-      else
-        if @options.series[name]?.color?
-          color = @palette.colors[@options.series[name].color]
-        else
-          color = @palette.color()
-        @seriesColors[name] = color
-      if renderer is "area"
-        stroke = no
-      else
-        stroke = color.stroke
-      renderer = @options.series[name]?.renderer or @options.renderer
-      seriesName = @options.series[name]?.name or name
-      @seriesDataNames[seriesName] = name
-      s = {
-        data: seriesData
-        name: seriesName
-        renderer: renderer
-        stroke: stroke
-        color: color.fill
-      }
-      if @options.series[name]?.disabled
-        s.disabled = yes
-      series.push s
+      primaryData = _.map data[name], (s) -> { x: s[0], y: s[1] }
+      series.push(@calculateSeriesData(primaryData, name, @primaryScale)) if primaryData.length > 0
+
+      if @options.secondaryAxis?
+        secondaryData = _.map data[name], (s) -> { x: s[0], y: s[2] }
+        secondaryOpts = { className: @options.secondaryAxis.className, yFormatter: @options.secondaryAxis.hoverDetail, renderer: 'better_bar' }
+        series.push(@calculateSeriesData(secondaryData, @options.secondaryAxis.name, @secondaryScale, secondaryOpts)) if secondaryData.length > 0 && secondaryData[0].y?
+
     series
 
   renderLoaders: ->
@@ -135,6 +159,7 @@ class PG.DataGraph
     if @detailGraph?
       @detail.html("")
       @detailGraph = null
+
     @detailGraph = new Rickshaw.Graph
       element: @detail.get(0)
       preserve: yes
@@ -144,21 +169,36 @@ class PG.DataGraph
       padding:
         top: 0.1
       dotSize: 2
-      unstack: @options.unstack
+      stack: @options.stack
+
+    @setupXAxis(@detail)
+    @setupYAxis(@detail)
 
     xAxis = new Rickshaw.Graph.Axis.Time
+      element: @detail.find('.x-axis-container').get(0)
       graph: @detailGraph
       ticksTreatment: "glow"
       timeFixture: new Rickshaw.Fixtures.TimeWithTimezone(@options.timezone)
-    xAxis.render()
-    _.defer => @wrapXAxis(@detail) unless PG.msie
 
-    yAxis = new Rickshaw.Graph.Axis.Y
+    new Rickshaw.Graph.Axis.Y.Scaled
+      element: @detail.find('.primary-y-axis-container').get(0)
       graph: @detailGraph
       tickFormat: @options.yAxisTickFormat
       ticksTreatment: "glow"
       pixelsPerTick: @options.pixelsPerTick or 25
-    yAxis.render()
+      orientation: 'right'
+      scale: @primaryScale
+
+    if @options.secondaryAxis?
+      new Rickshaw.Graph.Axis.Y.Scaled
+        element: @detail.find('.secondary-y-axis-container').get(0)
+        graph: @detailGraph
+        tickFormat: Rickshaw.Fixtures.Number.formatKMBT
+        ticksTreatment: "glow"
+        pixelsPerTick: @options.pixelsPerTick or 25
+        orientation: 'left'
+        scale: @secondaryScale
+        grid: false
 
     detail = new Rickshaw.Graph.HoverDetail
       graph: @detailGraph
@@ -197,8 +237,6 @@ class PG.DataGraph
     xAxis = new Rickshaw.Graph.Axis.Time
       graph: @overviewGraph
       timeFixture: new Rickshaw.Fixtures.TimeWithTimezone(@options.timezone)
-    xAxis.render()
-    _.defer => @wrapXAxis(@overview) unless PG.msie
 
     smoother = new Rickshaw.Graph.Smoother
       graph: @overviewGraph
@@ -214,10 +252,13 @@ class PG.DataGraph
     @rangeStart = @brush.min
     @rangeEnd = @brush.max
 
-  wrapXAxis: ($container) ->
+  setupXAxis: ($container) ->
     $xAxisContainer = $("<div class='x-axis-container'></div>")
     $container.find("svg").after $xAxisContainer
-    $xAxisContainer.append $container.find(".x_tick")
+
+  setupYAxis: ($container) ->
+    $container.find("svg").after $("<div class='primary-y-axis-container'></div>")
+    $container.find("svg").after $("<div class='secondary-y-axis-container'></div>")
 
   getActiveSeriesNames: ->
     _.compact _.map @graphs[0].series, (s) =>
